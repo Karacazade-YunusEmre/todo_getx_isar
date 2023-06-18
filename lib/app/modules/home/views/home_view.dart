@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../data/components/views/appbar_view.dart';
+import '../../../data/components/views/duty_type_view.dart';
 import '../../../data/consts/messages.dart';
 import '../controllers/home_controller.dart';
 import 'tooltip_view.dart';
@@ -14,7 +15,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppbarView(),
-      body: Column(
+      body: ListView(
         children: [
           ///region AddTodoForm
           Padding(
@@ -50,6 +51,11 @@ class HomeView extends GetView<HomeController> {
 
           ///endregion AddTodoForm
 
+          ///region DutyTypeRow
+          const DutyTypeView(),
+
+          ///endregion DutyTypeRow
+
           ///region CompleteToolTips
           const TooltipView(),
 
@@ -58,7 +64,7 @@ class HomeView extends GetView<HomeController> {
           ///region TodoList
           SizedBox(
             width: 0.9.sw,
-            height: 0.65.sh,
+            height: 0.6.sh,
             child: Obx(() => ListView.builder(
                 itemCount: controller.dutyList.length,
                 itemBuilder: (BuildContext context, int index) {

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
+import 'app/data/components/controllers/duty_type_controller.dart';
 import 'app/data/getx_services/reposiory_service.dart';
 import 'app/data/themes/app_theme.dart';
 import 'app/routes/app_pages.dart';
@@ -13,7 +14,12 @@ void main() {
 }
 
 void initializeApp() {
+  setupDependencies();
   setupServices();
+}
+
+void setupDependencies() {
+  Get.lazyPut<DutyTypeController>(() => DutyTypeController());
 }
 
 void setupServices() {

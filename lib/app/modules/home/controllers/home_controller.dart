@@ -8,6 +8,8 @@ class HomeController extends GetxController {
   final _currentTodoText = RxnString();
   final _unCompletedTodosCount = RxInt(0);
 
+  final fixedDutyList = <Duty>[];
+
   final formKey = GlobalKey<FormState>(debugLabel: 'DutyFormKey');
   late TextEditingController textAddController;
   late TextEditingController textEditController;
@@ -17,6 +19,7 @@ class HomeController extends GetxController {
     super.onInit();
 
     initTextControllers();
+    loadFixedDutyList();
     loadDutyList();
     checkCompletedTodos();
   }
@@ -75,9 +78,9 @@ class HomeController extends GetxController {
 
   ///region EventMethods
 
-  ///region LoadDutyList
-  void loadDutyList() {
-    dutyList.addAll([
+  ///region LoadFixedDutyList
+  void loadFixedDutyList() {
+    fixedDutyList.addAll([
       Duty(name: 'Birinci', isCompleted: false),
       Duty(name: 'İkinci', isCompleted: false),
       Duty(name: 'Üçüncü', isCompleted: false),
@@ -87,7 +90,35 @@ class HomeController extends GetxController {
     ]);
   }
 
+  ///endregion LoadFixedDutyList
+
+  ///region LoadDutyList
+  void loadDutyList() {
+    dutyList.clear();
+    dutyList.addAll(fixedDutyList);
+  }
+
   ///endregion LoadDutyList
+
+  void loadUnCompletedDuties() {
+    dutyList.clear();
+
+    for (Duty duty in fixedDutyList) {
+      if (!duty.isCompleted) {
+        dutyList.add(duty);
+      }
+    }
+  }
+
+  void loadCompletedDuties() {
+    dutyList.clear();
+
+    for (Duty duty in fixedDutyList) {
+      if (duty.isCompleted) {
+        dutyList.add(duty);
+      }
+    }
+  }
 
   ///region ChangeIsComplete
   void changeDutyComplete(Duty currentDuty, bool? value) {
