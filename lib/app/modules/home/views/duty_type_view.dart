@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:get/get.dart';
 
 import '../../../model/concrete/duty_type.dart';
@@ -30,6 +31,13 @@ class DutyTypeView extends GetView<DutyTypeController> {
                       items: getDutyTypeItems,
                       onChanged: controller.changeDutyTypeItem,
                       value: controller.currentDutyType,
+                      hint: Padding(
+                        padding: EdgeInsets.all(8.0.sp),
+                          child: Text(
+                        'Görev Türü',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),),
                       style: Theme.of(context).textTheme.bodyMedium,
                       dropdownColor: Colors.white,
                       alignment: Alignment.center,
@@ -40,9 +48,9 @@ class DutyTypeView extends GetView<DutyTypeController> {
               width: 0.4.sw,
               height: 0.06.sh,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: controller.addDutyTypeDialog,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueGrey,
+                  backgroundColor: Colors.lightBlueAccent,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),

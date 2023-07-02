@@ -1,5 +1,5 @@
 import '../../model/concrete/view_model/register_view_model.dart';
-import '../../model/concrete/view_model/signIn_view_model.dart';
+import '../../model/concrete/view_model/sign_in_view_model.dart';
 import '../../result/abstract/i_data_result.dart';
 import '../../result/abstract/i_result.dart';
 

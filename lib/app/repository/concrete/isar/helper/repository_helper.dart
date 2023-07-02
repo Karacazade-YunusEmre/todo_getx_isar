@@ -7,15 +7,7 @@ import '../../../../model/concrete/duty.dart';
 import '../../../../model/concrete/duty_type.dart';
 
 class RepositoryHelper with UtilitiesMixin {
-  RepositoryHelper._();
-
-  static RepositoryHelper? helper;
-
   static Isar? isar;
-
-  RepositoryHelper() {
-    helper ??= RepositoryHelper();
-  }
 
   Future<Isar> getRepositoryInstance() async {
     final repositoryPath = await getSupportDirectoryPath();

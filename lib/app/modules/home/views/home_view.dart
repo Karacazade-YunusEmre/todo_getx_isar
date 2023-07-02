@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../data/components/views/appbar_view.dart';
-import '../../../data/components/views/duty_type_view.dart';
 import '../../../data/consts/messages.dart';
+import 'duty_type_view.dart';
 import '../controllers/home_controller.dart';
 import 'tooltip_view.dart';
 

@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
 import '../../../core/result/abstract/i_data_result.dart';
@@ -14,7 +15,7 @@ class IsarDutyTypeRepository implements IDutyTypeRepository {
   late RepositoryHelper helper;
 
   IsarDutyTypeRepository() {
-    helper = RepositoryHelper();
+    helper = Get.find();
   }
 
   @override
