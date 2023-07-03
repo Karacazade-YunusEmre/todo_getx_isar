@@ -18,7 +18,7 @@ class TooltipView extends GetView<HomeController> {
           child: Tooltip(
             message: 'Tamamlanmayan Görevler',
             child: Obx(() =>
-                Text(controller.unCompletedTodosCount == 0 ? 'Tüm görevler tamamlandı.' : '${controller.unCompletedTodosCount} görev tamamlanmadı.')),
+                Text(controller.completedTodosCount == 0 ? 'Hiçbir görev tamamlanmadı.' : '${controller.completedTodosCount} görev tamamlandı.')),
           ),
         ),
         Padding(
@@ -30,14 +30,14 @@ class TooltipView extends GetView<HomeController> {
                 padding: EdgeInsets.symmetric(horizontal: 2.0.sp),
                 child: Tooltip(
                   message: 'Tüm Görevler',
-                  child: TextButton(onPressed: controller.loadDutyList, child: Text('AllTodos', style: Theme.of(context).textTheme.bodySmall)),
+                  child: TextButton(onPressed: () async => await controller.loadDutyList(), child: Text('AllTodos', style: Theme.of(context).textTheme.bodySmall)),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 2.0.sp),
                 child: Tooltip(
                   message: 'Tamamlanmamış Görevler',
-                  child: TextButton(onPressed: controller.loadUnCompletedDuties, child: Text('Active', style: Theme.of(context).textTheme.bodySmall)),
+                  child: TextButton(onPressed: () async => await controller.loadUnCompletedList(), child: Text('Active', style: Theme.of(context).textTheme.bodySmall)),
                 ),
               ),
               Padding(
@@ -45,7 +45,7 @@ class TooltipView extends GetView<HomeController> {
                 child: Tooltip(
                   message: 'Tamamlanmış Görevler',
                   child:
-                      TextButton(onPressed: controller.loadCompletedDuties, child: Text('Completed', style: Theme.of(context).textTheme.bodySmall)),
+                      TextButton(onPressed: () async => await controller.loadCompletedList(), child: Text('Completed', style: Theme.of(context).textTheme.bodySmall)),
                 ),
               ),
             ],

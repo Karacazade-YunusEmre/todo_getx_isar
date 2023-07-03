@@ -21,7 +21,6 @@ class DutyTypeController extends GetxController {
 
     setupDependencies();
     await loadDutyTypeList();
-    setupCurrentDutyType();
     setupTextControllers();
   }
 
@@ -86,15 +85,6 @@ class DutyTypeController extends GetxController {
 
   ///endregion LoadDutyTypeList
 
-  ///region SetupCurrentDutyType
-  void setupCurrentDutyType() {
-    if (dutyTypeList.isNotEmpty) {
-      currentDutyType = dutyTypeList.first;
-    }
-  }
-
-  ///endregion SetupCurrentDutyType
-
   ///region ChangeDutyTypeItem
   void changeDutyTypeItem(DutyType? item) {
     currentDutyType = item;
@@ -111,11 +101,24 @@ class DutyTypeController extends GetxController {
       await _dutyTypeRepository.add(newDutyType!);
     }
     await loadDutyTypeList();
-    setupCurrentDutyType();
+    currentDutyType = null;
+    textControllerDuty.clear();
     Get.back();
   }
 
   ///endregion AddDutyType
+
+  ///region RemoveDutyType
+  Future<void> removeDutyType({required DutyType dutyType}) async {
+    final resultDelete = await _dutyTypeRepository.delete(dutyType);
+
+    if (resultDelete.success) {
+      await loadDutyTypeList();
+      currentDutyType = null;
+    }
+  }
+
+  ///endregion RemoveDutyType
 
   ///endregion EventMethods
 

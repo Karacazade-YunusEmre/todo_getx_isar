@@ -33,13 +33,13 @@ class DutyTypeView extends GetView<DutyTypeController> {
                       value: controller.currentDutyType,
                       hint: Padding(
                         padding: EdgeInsets.all(8.0.sp),
-                          child: Text(
-                        'Görev Türü',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),),
+                        child: Text(
+                          'Görev Türü',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
                       style: Theme.of(context).textTheme.bodyMedium,
-                      dropdownColor: Colors.white,
                       alignment: Alignment.center,
                     )),
               ),
@@ -55,7 +55,10 @@ class DutyTypeView extends GetView<DutyTypeController> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                 ),
-                child: Text('Görev Türü Ekle', style: Theme.of(context).textTheme.bodyMedium),
+                child: Text(
+                  'Görev Türü Ekle',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
             ),
           ],
@@ -72,9 +75,20 @@ class DutyTypeView extends GetView<DutyTypeController> {
         value: dutyType,
         child: Dismissible(
           key: UniqueKey(),
-          child: Text(
-            dutyType.name,
-            style: Theme.of(Get.context!).textTheme.bodyMedium,
+          onDismissed: (DismissDirection direction) async => await controller.removeDutyType(dutyType: dutyType),
+          direction: DismissDirection.startToEnd,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0.sp),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  dutyType.name,
+                  style: Theme.of(Get.context!).textTheme.bodyMedium,
+                ),
+                const Icon(Icons.arrow_forward_ios, color: Colors.red),
+              ],
+            ),
           ),
         ),
       );

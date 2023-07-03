@@ -43,7 +43,7 @@ class IsarDutyTypeRepository implements IDutyTypeRepository {
         await isar.dutyTypes.delete(item.id);
       });
 
-      return ErrorResult();
+      return SuccessResult();
     } catch (_) {
       return ErrorResult();
     }

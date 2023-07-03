@@ -2,26 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../model/concrete/duty.dart';
+import '../../../repository/abstract/i_duty_repository.dart';
+import 'duty_type_controller.dart';
 
 class HomeController extends GetxController {
   final dutyList = RxList<Duty>();
   final _currentTodoText = RxnString();
-  final _unCompletedTodosCount = RxInt(0);
+  final _completedTodosCount = RxInt(0);
 
-  final fixedDutyList = <Duty>[];
-
+  late IDutyRepository dutyRepository;
+  late DutyTypeController dutyTypeController;
   final formKey = GlobalKey<FormState>(debugLabel: 'DutyFormKey');
   late TextEditingController textAddController;
   late TextEditingController textEditController;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
 
+    setupDependencies();
     initTextControllers();
-    loadFixedDutyList();
-    loadDutyList();
-    checkCompletedTodos();
+    await loadDutyList();
+    checkCompletedDuties();
   }
 
   @override
@@ -42,9 +44,9 @@ class HomeController extends GetxController {
 
   ///region UnCompletedTodosCount
 
-  int get unCompletedTodosCount => _unCompletedTodosCount.value;
+  int get completedTodosCount => _completedTodosCount.value;
 
-  set unCompletedTodosCount(int value) => _unCompletedTodosCount.value = value;
+  set completedTodosCount(int value) => _completedTodosCount.value = value;
 
   ///endregion UnCompletedTodosCount
 
@@ -59,6 +61,9 @@ class HomeController extends GetxController {
     }
     if (value != null && value.length <= 2) {
       return 'Görev adı 3 karakterden az olamaz!';
+    }
+    if (dutyTypeController.currentDutyType == null) {
+      return 'Lütfen görev türü seçin!';
     }
 
     return null;
@@ -78,55 +83,76 @@ class HomeController extends GetxController {
 
   ///region EventMethods
 
-  ///region LoadFixedDutyList
-  void loadFixedDutyList() {
-    fixedDutyList.addAll([
-      Duty(name: 'Birinci', isCompleted: false),
-      Duty(name: 'İkinci', isCompleted: false),
-      Duty(name: 'Üçüncü', isCompleted: false),
-      Duty(name: 'Dördüncü', isCompleted: false),
-      Duty(name: 'Beşinci', isCompleted: false),
-      Duty(name: 'Altıncı', isCompleted: false),
-    ]);
-  }
-
-  ///endregion LoadFixedDutyList
-
   ///region LoadDutyList
-  void loadDutyList() {
-    dutyList.clear();
-    dutyList.addAll(fixedDutyList);
+  Future<void> loadDutyList() async {
+    final resultDutyType = await dutyRepository.getAll();
+
+    if (resultDutyType.success) {
+      final dutyTypes = resultDutyType.data;
+
+      dutyList.clear();
+      dutyList.addAll(dutyTypes!);
+      dutyList.refresh();
+    }
   }
 
   ///endregion LoadDutyList
 
-  void loadUnCompletedDuties() {
-    dutyList.clear();
+  ///region CheckCompletedDuties
+  void checkCompletedDuties() {
+    completedTodosCount = 0;
 
-    for (Duty duty in fixedDutyList) {
-      if (!duty.isCompleted) {
-        dutyList.add(duty);
-      }
-    }
-  }
-
-  void loadCompletedDuties() {
-    dutyList.clear();
-
-    for (Duty duty in fixedDutyList) {
+    for (Duty duty in dutyList) {
       if (duty.isCompleted) {
-        dutyList.add(duty);
+        completedTodosCount++;
       }
     }
   }
+
+  ///endregion CheckCompletedDuties
+
+  ///region LoadCompletedList
+  Future<void> loadCompletedList() async {
+    await loadDutyList();
+    final completedList = <Duty>[];
+
+    for (Duty duty in dutyList) {
+      if (duty.isCompleted) {
+        completedList.add(duty);
+      }
+    }
+
+    dutyList.clear();
+    dutyList.addAll(completedList);
+  }
+
+  ///endregion LoadCompletedList
+
+  ///region LoadUnCompletedList
+  Future<void> loadUnCompletedList() async {
+    await loadDutyList();
+    final unCompletedList = <Duty>[];
+
+    for (Duty duty in dutyList) {
+      if (!duty.isCompleted) {
+        unCompletedList.add(duty);
+      }
+    }
+
+    dutyList.clear();
+    dutyList.addAll(unCompletedList);
+  }
+
+  ///endregion LoadUnCompletedList
 
   ///region ChangeIsComplete
-  void changeDutyComplete(Duty currentDuty, bool? value) {
+  Future<void> changeDutyComplete(Duty currentDuty, bool? value) async {
     if (value != null) {
       currentDuty.isCompleted = value;
 
-      dutyList.refresh();
-      checkCompletedTodos();
+      await dutyRepository.update(currentDuty);
+      await loadDutyList();
+      checkCompletedDuties();
     }
   }
 
@@ -141,15 +167,21 @@ class HomeController extends GetxController {
   ///endregion UpdateDuty
 
   ///region AddDuty
-  void addDuty() {
+  Future<void> addDuty() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
       Duty newDuty = Duty(name: currentTodoText!, isCompleted: false);
-      dutyList.add(newDuty);
-      dutyList.refresh();
+      newDuty.type.value = dutyTypeController.currentDutyType;
+      final resultAddDuty = await dutyRepository.add(newDuty);
 
-      FocusScope.of(Get.context!).unfocus();
+      if (resultAddDuty.success) {
+        FocusScope.of(Get.context!).unfocus();
+        textAddController.clear();
+
+        await loadDutyList();
+        checkCompletedDuties();
+      }
     }
   }
 
@@ -174,6 +206,14 @@ class HomeController extends GetxController {
 
   ///region GeneralPurposeMethods
 
+  ///region SetupDependencies
+  void setupDependencies() {
+    dutyRepository = Get.find();
+    dutyTypeController = Get.find();
+  }
+
+  ///endregion SetupDependencies
+
   ///region InitTextControllers
   void initTextControllers() {
     textAddController = TextEditingController();
@@ -189,19 +229,6 @@ class HomeController extends GetxController {
   }
 
   ///endregion DisposeTextControllers
-
-  ///region CheckCompletedWidgets
-  void checkCompletedTodos() {
-    unCompletedTodosCount = 0;
-
-    for (Duty duty in dutyList) {
-      if (!duty.isCompleted) {
-        unCompletedTodosCount++;
-      }
-    }
-  }
-
-  ///endregion CheckCompletedWidgets
 
   ///endregion GeneralPurposeMethods
 }

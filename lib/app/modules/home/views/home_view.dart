@@ -44,7 +44,7 @@ class HomeView extends GetView<HomeController> {
                 ),
                 validator: controller.todoValidator,
                 onSaved: controller.currentTodoOnSaved,
-                onEditingComplete: controller.addDuty,
+                onEditingComplete: () async => await controller.addDuty(),
               ),
             ),
           ),
@@ -77,7 +77,7 @@ class HomeView extends GetView<HomeController> {
                     child: ListTile(
                       leading: Checkbox(
                         value: completed,
-                        onChanged: (bool? value) => controller.changeDutyComplete(currentDuty, value),
+                        onChanged: (bool? value) async => await controller.changeDutyComplete(currentDuty, value),
                       ),
                       title: EditableText(
                         controller: TextEditingController(text: currentDuty.name),
