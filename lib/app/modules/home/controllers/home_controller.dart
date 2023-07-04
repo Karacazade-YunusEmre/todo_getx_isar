@@ -188,9 +188,10 @@ class HomeController extends GetxController {
   ///endregion AddDuty
 
   ///region RemoveDuty
-  void removeDuty({required DismissDirection direction, required Duty currentDuty}) {
-    dutyList.remove(currentDuty);
-    dutyList.refresh();
+  Future<void> removeDuty({required Duty currentDuty}) async {
+    await dutyRepository.delete(currentDuty);
+    await loadDutyList();
+    checkCompletedDuties();
   }
 
   ///endregion RemoveDuty

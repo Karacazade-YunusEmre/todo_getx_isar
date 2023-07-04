@@ -89,7 +89,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                       trailing: Icon(Icons.arrow_forward_ios, color: Colors.red, size: 18.sp),
                     ),
-                    onDismissed: (DismissDirection direction) => controller.removeDuty(direction: direction, currentDuty: currentDuty),
+                    onDismissed: (DismissDirection direction) async => await controller.removeDuty(currentDuty: currentDuty),
                   );
                 })),
           ),
