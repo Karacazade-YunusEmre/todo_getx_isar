@@ -1,20 +1,20 @@
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
-import '../../../core/result/abstract/i_data_result.dart';
-import '../../../core/result/abstract/i_result.dart';
-import '../../../core/result/concrete/error_data_result.dart';
-import '../../../core/result/concrete/error_result.dart';
-import '../../../core/result/concrete/success_data_result.dart';
-import '../../../core/result/concrete/success_result.dart';
-import '../../../model/concrete/duty.dart';
-import '../../abstract/i_duty_repository.dart';
+import '../../core/result/abstract/i_data_result.dart';
+import '../../core/result/abstract/i_result.dart';
+import '../../core/result/concrete/error_data_result.dart';
+import '../../core/result/concrete/error_result.dart';
+import '../../core/result/concrete/success_data_result.dart';
+import '../../core/result/concrete/success_result.dart';
+import '../../model/concrete/duty.dart';
+import '../abstract/i_duty_repository.dart';
 import 'helper/repository_helper.dart';
 
-class IsarDutyRepository implements IDutyRepository {
+class DutyRepository implements IDutyRepository {
   late RepositoryHelper helper;
 
-  IsarDutyRepository() {
+  DutyRepository() {
     helper = Get.find();
   }
 

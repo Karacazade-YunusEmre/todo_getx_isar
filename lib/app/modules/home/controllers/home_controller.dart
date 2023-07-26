@@ -12,6 +12,7 @@ class HomeController extends GetxController {
 
   late IDutyRepository dutyRepository;
   late DutyTypeController dutyTypeController;
+
   final formKey = GlobalKey<FormState>(debugLabel: 'DutyFormKey');
   late TextEditingController textAddController;
   late TextEditingController textEditController;

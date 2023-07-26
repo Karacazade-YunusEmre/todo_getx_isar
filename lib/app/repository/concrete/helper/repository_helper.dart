@@ -1,10 +1,10 @@
 import 'package:isar/isar.dart';
 
-import '../../../../core/result/abstract/i_result.dart';
-import '../../../../core/result/concrete/success_result.dart';
-import '../../../../data/mixins/utilities_mixin.dart';
-import '../../../../model/concrete/duty.dart';
-import '../../../../model/concrete/duty_type.dart';
+import '../../../core/result/abstract/i_result.dart';
+import '../../../core/result/concrete/success_result.dart';
+import '../../../data/mixins/utilities_mixin.dart';
+import '../../../model/concrete/duty.dart';
+import '../../../model/concrete/duty_type.dart';
 
 class RepositoryHelper with UtilitiesMixin {
   static Isar? isar;
